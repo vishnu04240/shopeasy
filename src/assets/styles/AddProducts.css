@@ -1,0 +1,77 @@
+.addproducts {
+    .head {
+        h1 {
+            text-align: center;
+        }
+
+    }
+
+    .form-box {
+        form {
+            button {
+                padding: 15px 30px;
+                border-radius: 10px;
+                background-color: black;
+                color: white;
+                font-weight: lighter;
+                font-size: 15px;
+                border: none;
+                margin: auto;
+                display: block;
+                margin-bottom: 100px;
+            }
+
+            table {
+                margin: 50px auto;
+                border-collapse: collapse;
+                border-color: rgba(128, 128, 128, 0.805);
+
+                tr {
+                    td {
+                        text-align: center;
+                        padding: 20px;
+                        transform: scale(1.0);
+
+                        input {
+                            padding: 5px;
+                            width: 85%;
+                            border-radius: 5px;
+                            border: solid 1px gray;
+                            transition: all 0.2s;
+                        }
+                        input:hover, textarea:hover, select:hover {
+                            transform: scale(1.1);
+                            border: solid 1px black;
+                        }
+
+                        textarea {
+                            padding: 10px;
+                            width: 85%;
+                            border-radius: 5px;
+                            border: solid 1px gray;
+                        }
+
+                        select {
+                            padding: 5px;
+                            width: 85%;
+                            border-radius: 5px;
+                            border: solid 1px gray;
+                        }
+                    }
+
+                }
+
+                td:nth-child(odd) {
+                    background-color: rgba(0, 0, 0, 0.895);
+                    color: white;
+                    font-size: 14px;
+                    font-weight: bolder;
+                }
+            }
+
+        }
+
+
+
+    }
+}

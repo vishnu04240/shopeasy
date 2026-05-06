@@ -1,0 +1,39 @@
+.cartitems{
+    .head{
+        padding: 20px;
+    }
+    .container{
+        
+        table{
+            margin: auto;
+            border-collapse:collapse ;
+            th{
+                color: white;
+                background-color: black;
+                padding: 20px;
+
+            }
+            tr{
+                text-align: center;
+                img{
+                    height: 170px;
+                    width:150px;
+                    padding: 10px;
+                }
+                button{
+                    color: white;
+                    background-color: red;
+                    padding: 10px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    border: none;
+                }
+                p{
+                    padding: 20px;
+                }
+            }
+
+        }
+
+    }
+}
