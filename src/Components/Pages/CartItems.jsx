@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import '../../assets/styles/CartItems.css'
-import axios from 'axios'
-
+// ✅ 1. Import your json file
+import jsonData from '../../jsondata/products.json'
 
 const CartItems = () => {
 
-    let [data, setData] = useState([])
+    // ✅ 2. Use cartitems array directly from json
+    let [data, setData] = useState(jsonData.cartitems)
 
-    let fetchapis = async () => {
-        let apidata = await fetch('http://localhost:4000/cartitems')
-        let res = await apidata.json()
-        setData(res)
-        console.log(res);
-
-    }
-    useEffect(() => { fetchapis() }, [])
-
-    let deleteproduct = async (id) => {
-        await axios.delete(`http://localhost:4000/cartitems/${id}`)
-        alert('item deleted')
+    // ✅ 3. Delete just filters from state (no backend needed)
+    let deleteproduct = (id) => {
+        let updated = data.filter(item => item.id !== id)
+        setData(updated)
     }
 
     return (
@@ -38,22 +31,22 @@ const CartItems = () => {
                                 <th>IMAGE</th>
                                 <th>DELETE</th>
                             </tr>
-
+                        </thead>
+                        <tbody>
                             {data.map((elem, index) => {
-                                let { id, title, price, description, category, image, rating } = elem
+                                let { id, title, price, category, image } = elem
                                 return (
-                                    <tr>
-                                        <td>{id}</td>
+                                    <tr key={id}>
+                                        <td>{index + 1}</td>
                                         <td><p>{title}</p></td>
                                         <td>{category}</td>
                                         <td>{Math.floor(price * 80)}rs</td>
-                                        <td><img src={image} alt="" /></td>
+                                        <td><img src={image} alt="" width="80px" /></td>
                                         <td><button onClick={() => deleteproduct(id)}>DELETE</button></td>
-
                                     </tr>
                                 )
                             })}
-                        </thead>
+                        </tbody>
                     </table>
                 </div>
             </div>
