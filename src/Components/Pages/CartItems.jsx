@@ -6,8 +6,9 @@ import jsonData from '../../jsondata/products.json'
 const CartItems = () => {
 
     // ✅ 2. Use cartitems array directly from json
-    let [data, setData] = useState(jsonData.cartitems)
-
+   let [data, setData] = useState(
+  JSON.parse(localStorage.getItem('cart')) || jsonData.cartitems
+)
     // ✅ 3. Delete just filters from state (no backend needed)
     let deleteproduct = (id) => {
         let updated = data.filter(item => item.id !== id)

@@ -3,54 +3,51 @@ import '../../assets/styles/AddProducts.css'
 
 const AddProducts = () => {
 
-    let [formdata,setFormdata]=useState({
-        title:"",
-        price:"",
-        description:"",
-        category:"",
-        image:"",
+    let [formdata, setFormdata] = useState({
+        title: "",
+        price: "",
+        description: "",
+        category: "",
+        image: "",
         rating: {
-             rate:"",
-             count:""
+            rate: "",
+            count: ""
         }
-        
     })
 
-    let handleInput=(e)=>{
-       let key =e.target.name
-       let val =e.target.value
+    let handleInput = (e) => {
+        let key = e.target.name
+        let val = e.target.value
 
-       if(key === 'rate' || key === 'count'){
-        setFormdata({...formdata,rating:{
-            ...formdata.rating,
-            [key]:val
-        }})
+        if (key === 'rate' || key === 'count') {
+            setFormdata({
+                ...formdata, rating: {
+                    ...formdata.rating,
+                    [key]: val
+                }
+            })
+        } else {
+            setFormdata({ ...formdata, [key]: val })
         }
-        else{
-            setFormdata({...formdata,[key]:val})
-        }
-        // let newProduct= {
-            // ...formdata,
-            // [key]:val
-        // }
-        // console.log(newProduct);
-        // 
-// 
-        // setFormdata(newProduct)
     }
 
-    let handlesubmit =(e) =>{
+    let handlesubmit = (e) => {
         e.preventDefault()
-        fetch(`http://localhost:4000/products`,{
-            method:"POST",
-            headers:{"content-type":"application/json"},
-            body:JSON.stringify(formdata)
-        })
-        alert('prod adds')
+
+        // ✅ Save to localStorage instead of localhost
+        let existingProducts = JSON.parse(localStorage.getItem('products')) || []
+
+        let newProduct = {
+            ...formdata,
+            id: Date.now().toString() // ✅ generate unique id
+        }
+
+        existingProducts.push(newProduct)
+        localStorage.setItem('products', JSON.stringify(existingProducts))
+
+        alert('Product Added!')
         window.location.reload()
     }
-
-
 
     return (
         <>
@@ -63,43 +60,46 @@ const AddProducts = () => {
                         <table border={1}>
                             <thead>
                                 <tr>
-                                    <td><label htmlFor="">TITLE</label></td>
-                                    <td><input type="text" placeholder='Title' /></td>
+                                    <td><label>TITLE</label></td>
+                                    <td><input type="text" placeholder='Title'
+                                        name='title' value={formdata.title} onChange={handleInput} /></td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">PRICE</label></td>
+                                    <td><label>PRICE</label></td>
                                     <td><input type="text" placeholder='Price'
-                                    name='price' value={formdata.price} onChange={handleInput} /></td>
+                                        name='price' value={formdata.price} onChange={handleInput} /></td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">DESCRIPTION</label></td>
+                                    <td><label>DESCRIPTION</label></td>
                                     <td><textarea rows={3} cols={40} placeholder='Desc'
-                                    name='description' value={formdata.description} onChange={handleInput}></textarea></td>
+                                        name='description' value={formdata.description} onChange={handleInput}></textarea></td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">CATEGORY</label></td>
-                                    <td><select name="category" id="" onChange={handleInput}>
-                                        <option value="">select</option>
-                                        <option value="men's clothing">men's clothing</option>
-                                        <option value="jewelery">jewelery</option>
-                                        <option value="electronics">electronics</option>
-                                        <option value="women's clothing">women's clothing</option>
-                                    </select></td>
+                                    <td><label>CATEGORY</label></td>
+                                    <td>
+                                        <select name="category" onChange={handleInput}>
+                                            <option value="">select</option>
+                                            <option value="men's clothing">men's clothing</option>
+                                            <option value="jewelery">jewelery</option>
+                                            <option value="electronics">electronics</option>
+                                            <option value="women's clothing">women's clothing</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">IMAGE</label></td>
-                                    <td><input type="text" placeholder='Image URL' 
-                                    name='image' value={formdata.image} onChange={handleInput}/></td>
+                                    <td><label>IMAGE</label></td>
+                                    <td><input type="text" placeholder='Image URL'
+                                        name='image' value={formdata.image} onChange={handleInput} /></td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">RATING</label></td>
-                                    <td><input type="text" placeholder='Rating' 
-                                    name='rate' value={formdata.rating.rate} onChange={handleInput}/></td>
+                                    <td><label>RATING</label></td>
+                                    <td><input type="text" placeholder='Rating'
+                                        name='rate' value={formdata.rating.rate} onChange={handleInput} /></td>
                                 </tr>
                                 <tr>
-                                    <td><label htmlFor="">COUNT</label></td>
-                                    <td><input type="text" placeholder='Count' 
-                                    name='count' value={formdata.rating.count} onChange={handleInput}/></td>
+                                    <td><label>COUNT</label></td>
+                                    <td><input type="text" placeholder='Count'
+                                        name='count' value={formdata.rating.count} onChange={handleInput} /></td>
                                 </tr>
                             </thead>
                         </table>
@@ -107,10 +107,8 @@ const AddProducts = () => {
                     </form>
                 </div>
             </div>
-
         </>
     )
 }
-
 
 export default AddProducts

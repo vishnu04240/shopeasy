@@ -1,71 +1,58 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import jsonData from '../../jsondata/products.json' // ✅ import json
 
 const Categories = () => {
 
-  let [products, setProducts] = useState([])
+  // ✅ load products directly from json
+  let [products, setProducts] = useState(jsonData.products)
   let [proname, setProname] = useState('')
-  let [category, setCatogory] = useState([])
+  let [category, setCategory] = useState([])
 
-
-  let fetchapi = async () => {
-    let resp = await fetch('http://localhost:4000/products')
-    let apidata = await resp.json()
-    setProducts(apidata)
-  }
-  useEffect(() => {
-    fetchapi()
-  }, [])
-
+  // ✅ filter by category from local state
   let handleclick = (e) => {
-    setProname(e.target.innerText)
+    let clickedCategory = e.target.innerText
+    setProname(clickedCategory)
     let filtereddata = products.filter((elem) => {
-      return elem.category === proname
+      return elem.category === clickedCategory // ✅ fixed bug (was using old proname)
     })
-    console.log(filtereddata);
-    setCatogory(filtereddata)
-
+    setCategory(filtereddata)
   }
 
-  let deleteproduct = async(id)=>{
-    let bool = window.confirm('DO you want to delete this item')
-    if(bool){
-      await axios.delete(`http://localhost:4000/products/${id}`)
+  // ✅ delete from local state
+  let deleteproduct = (id) => {
+    let bool = window.confirm('Do you want to delete this item?')
+    if (bool) {
+      let updated = products.filter((elem) => elem.id !== id)
+      setProducts(updated)
+      let updatedCategory = category.filter((elem) => elem.id !== id)
+      setCategory(updatedCategory)
       alert('Product Item is Deleted')
-    }else{
+    } else {
       alert('Product Item is Not Deleted')
     }
-
   }
 
-  let addtocart = (id)=>{
-    let cartdata = products.filter((elem)=>{
-      return elem.id === id
-    })
-    console.log(...cartdata);
-    
-
-    let bool = window.confirm('do u want to add')
-    if (bool){
-      fetch('http://localhost:4000/cartitems',{
-        method:'POST',
-        headers:{'content-type':'application/json'},
-        body:JSON.stringify(...cartdata)
-      })
-      alert("item added")
-    }else{
-      alert('item not added')
+  // ✅ add to cart using localStorage
+  let addtocart = (id) => {
+    let bool = window.confirm('Do you want to add?')
+    if (bool) {
+      let cartdata = products.find((elem) => elem.id === id)
+      
+      // get existing cart from localStorage
+      let existingCart = JSON.parse(localStorage.getItem('cart')) || []
+      existingCart.push(cartdata)
+      localStorage.setItem('cart', JSON.stringify(existingCart))
+      
+      alert('Item added to cart!')
+    } else {
+      alert('Item not added')
     }
   }
-
-
-
 
   return (
     <div>
-
       <div className="categorybox">
-        <h3> CATEGORIES</h3>
+        <h3>CATEGORIES</h3>
         <ul>
           <li onClick={handleclick}>men's clothing</li>
           <li onClick={handleclick}>jewelery</li>
@@ -78,25 +65,22 @@ const Categories = () => {
 
       <div className="category-result">
         {category.map((ele, index) => {
-          let { id,title, price, description, category, image, rating } = ele
+          let { id, title, price, category, image } = ele
           return (
             <div className="card" key={index}>
               <div className="img"><img src={image} alt="" /></div>
               <div className="tp">
                 <div className="title"><p>{title}</p></div>
-                <div className="price"><p>{price*80}rs</p></div>
+                <div className="price"><p>{Math.floor(price * 80)}rs</p></div>
               </div>
-              <div className="desc"></div>
               <div className="btn">
-                <button onClick={()=>addtocart(id)}>ADD</button>
-                <button className='del' onClick={()=>deleteproduct(id)}>DELETE</button>
+                <button onClick={() => addtocart(id)}>ADD</button>
+                <button className='del' onClick={() => deleteproduct(id)}>DELETE</button>
               </div>
             </div>
           )
         })}
-        
       </div>
-
     </div>
   )
 }
